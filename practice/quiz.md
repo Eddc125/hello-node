@@ -20,7 +20,6 @@ function readData(idx) {
 ## 2.after 會在什麼數字後印出？ 
 500 
 ## 3.為什麼？
-- 過程
 - 進行for迴圈印出 1-100 ， idx =100  -> if 條件成立
 - 回到for迴圈印出 101-200 ， idx =200  -> if 條件成立
 - 回到for迴圈印出 201-300 ， idx =300 if 條件成立
@@ -50,7 +49,6 @@ console.log("after");
 ## 2.after 會在什麼數字後印出？ 
 100
 ## 3.為什麼？
-- 過程
 - 進行for迴圈印出 1-100 ， idx =100  -> if 條件成立
 - 執行setTimeout() 跳出 readData() 先印出 after
 - 再回到for迴圈印出 101-500 ， idx =500  -> if 條件不成立
