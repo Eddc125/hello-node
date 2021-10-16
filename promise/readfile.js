@@ -18,6 +18,8 @@ let p = new Promise((resolve,reject)=>{
     })
 });
 
+console.log(p); // Promise { <pending> }
+
 p.then((data)=>{
     console.log("讀檔正確",data);
 }).catch((err) =>{
