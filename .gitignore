@@ -2,4 +2,6 @@ node_modules
 
 .vscode
 
+.env
+
 # git rm -r  --cached 資料夾名稱  => 不小心上傳到資料夾(-r)/檔案 ， 要移除 git 上面的東西，但保留本地資料
