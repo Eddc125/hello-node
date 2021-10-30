@@ -14,7 +14,7 @@ function App() {
     <Router>
       <Navbar />
       <div className="container pt-6 pb-5">
-        <div className="columns">
+        <div className="columns mt-4">
           <Switch>
             <Route path="/" exact>
               <Home />

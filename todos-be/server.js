@@ -2,6 +2,7 @@ const express = require("express");
 require("dotenv").config();
 const mysql = require("mysql");
 const Promise = require("bluebird");
+const cors = require("cors");
 
 // 先建立資料庫連線
 let connection = mysql.createConnection({
@@ -11,9 +12,13 @@ let connection = mysql.createConnection({
   database: process.env.DB_NAME,
 });
 
-connection = Promise.promisifyAll(connection)
+connection = Promise.promisifyAll(connection);
 
 let app = express(); // application
+let corsOptions = {
+  origin: "*", // 全部的網域都可以可以require
+};
+app.use(cors(corsOptions)); // 不同 port / domain 時可以允許
 
 // app.use 告訴 express 這裡有一個中間件(middleware)
 // middleware 只是一個函式，會有三個參數
@@ -56,9 +61,36 @@ app.get("/cart", (request, response) => {
 });
 
 // 從資料庫 iii-todos 的 todos 要資料
-app.get("/api/todos",async (request, response) => {
+app.get("/api/todos", async (request, response) => {
   let data = await connection.queryAsync("SELECT * FROM todos");
   response.json(data);
+});
+
+//  /api/todos/24
+// 根據 id 取得單筆資料
+app.get("/api/todos/:todoId", async (require, response) => {
+  let data = await connection.queryAsync("SELECT * FROM todos WHERE id = ?;", [
+    require.params.todoId,
+  ]);
+  // response.json(data);
+  if(data.length > 0){
+    response.json(data[0])
+  }else{
+    response.status(404).send("沒有此ID")
+  }
+});
+
+// 取得 member 資料
+app.get("/api/members/:memberId", async (require, response) => {
+  let data = await connection.queryAsync("SELECT * FROM members WHERE id = ?;", [
+    require.params.memberId,
+  ]);
+  // response.json(data);
+  if(data.length > 0){
+    response.json(data[0])
+  }else{
+    response.status(404).send("沒有此ID")
+  }
 });
 
 //負責 查無分頁 的紀錄
