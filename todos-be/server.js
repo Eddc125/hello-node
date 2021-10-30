@@ -1,4 +1,17 @@
 const express = require("express");
+require("dotenv").config();
+const mysql = require("mysql");
+const Promise = require("bluebird");
+
+// 先建立資料庫連線
+let connection = mysql.createConnection({
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PWD,
+  database: process.env.DB_NAME,
+});
+
+connection = Promise.promisifyAll(connection)
 
 let app = express(); // application
 // app.use 告訴 express 這裡有一個中間件(middleware)
@@ -41,6 +54,12 @@ app.get("/cart", (request, response) => {
   response.send("我是購物車頁");
 });
 
+// 從資料庫 iii-todos 的 todos 要資料
+app.get("/api/todos",async (request, response) => {
+  let data = await connection.queryAsync("SELECT * FROM todos");
+  response.json(data);
+});
+
 //負責 查無分頁 的紀錄
 app.use((request, response, next) => {
   console.log(`${request.url} 查無此分頁`);
@@ -57,5 +76,6 @@ app.use((request, response, next) => {
 
 // 3001 port
 app.listen(3001, () => {
+  connection.connect();
   console.log("express app 啟動了");
 });
