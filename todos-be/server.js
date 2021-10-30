@@ -28,10 +28,10 @@ app.get("/member", (request, response) => {
 });
 
 // 課程頁 1 & 2 都會 console.log出來
-app.get("/course", (request, response,next) => {
-  console.log("我是課程頁1");
-  next();
-});
+// app.get("/course", (request, response,next) => {
+//   console.log("我是課程頁1");
+//   next();
+// });
 app.get("/course", (request, response) => {
   console.log("我是課程頁2");
   response.send("我是課程頁");
@@ -41,7 +41,7 @@ app.get("/cart", (request, response) => {
   response.send("我是購物車頁");
 });
 
-// 負責 查無分頁 的紀錄
+//負責 查無分頁 的紀錄
 app.use((request, response, next) => {
   console.log(`${request.url} 查無此分頁`);
   next();
