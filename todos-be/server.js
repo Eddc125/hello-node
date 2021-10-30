@@ -14,6 +14,7 @@ let connection = mysql.createConnection({
 connection = Promise.promisifyAll(connection)
 
 let app = express(); // application
+
 // app.use 告訴 express 這裡有一個中間件(middleware)
 // middleware 只是一個函式，會有三個參數
 app.use((request, response, next) => {
