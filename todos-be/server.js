@@ -34,6 +34,11 @@ app.use((request, response, next) => {
   next();
 });
 
+// 使用這個中間件，才可以讀到body的資料
+app.use(express.urlencoded({extended:true}))
+// 使用這個中間件，才可以解析到json的資料
+app.use(express.json())
+
 // 路由 route / router (有點分配/判斷網址的概念) -> 也算是一種中間件
 // app.Method(Path,Handler)
 // Method : GET , POST , PUT , DELETE , PATCH ...
@@ -42,6 +47,7 @@ app.get("/", (request, response) => {
   response.send("我是首頁"); // browser 顯示出的頁面
 }); //  "/" => 首頁
 
+/* //上課練習 中間件
 app.get("/member", (request, response) => {
   response.send("我是會員頁");
 });
@@ -58,29 +64,18 @@ app.get("/course", (request, response) => {
 
 app.get("/cart", (request, response) => {
   response.send("我是購物車頁");
-});
+}); */
 
-// 從資料庫 iii-todos 的 todos 要資料
-app.get("/api/todos", async (request, response) => {
-  let data = await connection.queryAsync("SELECT * FROM todos");
-  response.json(data);
-});
-
-//  /api/todos/24
-// 根據 id 取得單筆資料
-app.get("/api/todos/:todoId", async (require, response) => {
-  let data = await connection.queryAsync("SELECT * FROM todos WHERE id = ?;", [
-    require.params.todoId,
-  ]);
-  // response.json(data);
-  if(data.length > 0){
-    response.json(data[0])
-  }else{
-    response.status(404).send("沒有此ID")
-  }
-});
+// 將 Todos 的 POST 引入
+let todosRouter = require('./routers/todos');
+app.use('/api/todos',todosRouter);
+// 將 Register 的 POST 引入
+let authRouter = require('./routers/auth');
+app.use('/api/auth',authRouter);
 
 // 取得 member 資料
+// let memberRouter = require('./routers/member');
+// app.use('/api/members',memberRouter)
 app.get("/api/members/:memberId", async (require, response) => {
   let data = await connection.queryAsync("SELECT * FROM members WHERE id = ?;", [
     require.params.memberId,
@@ -92,6 +87,7 @@ app.get("/api/members/:memberId", async (require, response) => {
     response.status(404).send("沒有此ID")
   }
 });
+
 
 //負責 查無分頁 的紀錄
 app.use((request, response, next) => {

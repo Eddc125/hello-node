@@ -6,18 +6,19 @@ import DeleteBtn from "./buttons/DeleteBtn";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { STATUS_WORD, STATUS_COLOR } from "../../configs/status";
+import { API_URL } from "../../configs/url";
 
 const TodoList = () => {
   const [todos, setTodos] = useState(null);
 
   useEffect(async () => {
-    let response = await axios.get("http://localhost:3001/api/todos/");
+    let response = await axios.get(`${API_URL}/api/todos/`);
     setTodos(response.data);
   }, []);
 
   // 如果 todos 資料尚未抓回來 會停留在 載入中的畫面
-  if(todos == null){
-    return(<>載入中...</>)
+  if (todos == null) {
+    return <>載入中...</>;
   }
 
   return (
@@ -53,11 +54,12 @@ const TodoList = () => {
             <div className="message-body">
               {item.content}
 
-              <div>到期日：{item.deadline.slice(0,10)}</div>
+              <div>到期日：{item.deadline.slice(0, 10)}</div>
             </div>
             <footer className="card-footer">
-              <ShowBtn />
-              <a href="/" className="card-footer-item">
+              {/* 把該 todo 的 id 從 List 傳給 ShowBtn */}
+              <ShowBtn itemId={item.id} />
+              <a href="/todos" className="card-footer-item">
                 <FontAwesomeIcon icon={faCheck} className="mr-2" />
                 Done
               </a>
